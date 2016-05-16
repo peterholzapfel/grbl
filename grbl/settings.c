@@ -159,8 +159,6 @@ uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
   return(true);
 }  
 
-int fuck, fuckedup;
-
 // Reads Grbl global settings struct from EEPROM.
 uint8_t read_global_settings() {
   // Check version-byte of eeprom
@@ -173,8 +171,6 @@ uint8_t read_global_settings() {
   if (!(memcpy_from_eeprom_with_checksum((char*)&settings, EEPROM_ADDR_GLOBAL, sizeof(settings_t)))) 
     return(false);
  
-    
-  }
     
   return(true);
 }
