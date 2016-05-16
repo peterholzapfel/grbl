@@ -28,18 +28,22 @@
 #define defaults_h
 
   // Grbl generic default settings. Should work across different machines.
-  #define DEFAULT_X_STEPS_PER_MM 250.0
-  #define DEFAULT_Y_STEPS_PER_MM 250.0
-  #define DEFAULT_Z_STEPS_PER_MM 250.0
-  #define DEFAULT_X_MAX_RATE 500.0 // mm/min
-  #define DEFAULT_Y_MAX_RATE 500.0 // mm/min
+  #define DEFAULT_A_STEPS_PER_MM 13.3333333
+  #define DEFAULT_X_STEPS_PER_MM 200.0
+  #define DEFAULT_Y_STEPS_PER_MM 200.0
+  #define DEFAULT_Z_STEPS_PER_MM 200.0
+  #define DEFAULT_A_MAX_RATE 1200.0 // mm/min
+  #define DEFAULT_X_MAX_RATE 2000.0 // mm/min
+  #define DEFAULT_Y_MAX_RATE 2000.0 // mm/min
   #define DEFAULT_Z_MAX_RATE 500.0 // mm/min
-  #define DEFAULT_X_ACCELERATION (10.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
-  #define DEFAULT_Y_ACCELERATION (10.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
-  #define DEFAULT_Z_ACCELERATION (10.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
-  #define DEFAULT_X_MAX_TRAVEL 200.0 // mm
-  #define DEFAULT_Y_MAX_TRAVEL 200.0 // mm
-  #define DEFAULT_Z_MAX_TRAVEL 200.0 // mm
+  #define DEFAULT_A_ACCELERATION (90.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
+  #define DEFAULT_X_ACCELERATION (50.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
+  #define DEFAULT_Y_ACCELERATION (50.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
+  #define DEFAULT_Z_ACCELERATION (20.0*60*60) // 10*60*60 mm/min^2 = 10 mm/sec^2
+  #define DEFAULT_A_MAX_TRAVEL 360.0 // mm
+  #define DEFAULT_X_MAX_TRAVEL 1000.0 // mm
+  #define DEFAULT_Y_MAX_TRAVEL 1000.0 // mm
+  #define DEFAULT_Z_MAX_TRAVEL 100.0 // mm
   #define DEFAULT_STEP_PULSE_MICROSECONDS 10
   #define DEFAULT_STEPPING_INVERT_MASK 0
   #define DEFAULT_DIRECTION_INVERT_MASK 0
