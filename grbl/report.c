@@ -246,6 +246,7 @@ void report_grbl_settings() {
           case X_AXIS: printPgmString(PSTR("x")); break;
           case Y_AXIS: printPgmString(PSTR("y")); break;
           case Z_AXIS: printPgmString(PSTR("z")); break;
+          case A_AXIS: printPgmString(PSTR("A")); break;
         }
         switch (set_idx) {
           case 0: printPgmString(PSTR(", step/mm")); break;
@@ -426,7 +427,7 @@ void report_realtime_status()
   // for a user to select the desired real-time data.
   uint8_t idx;
   int32_t current_position[N_AXIS]; // Copy current state of the system position variable
-  memcpy(current_position,sys.position,sizeof(sys.position));
+  memcpy(current_position,sys.position,sizeof(current_position));
   float print_position[N_AXIS];
  
   // Report current machine state
@@ -451,7 +452,8 @@ void report_realtime_status()
     printPgmString(PSTR(",MPos:")); 
     for (idx=0; idx< N_AXIS; idx++) {
       printFloat_CoordValue(print_position[idx]);
-      if (idx < (N_AXIS-1)) { printPgmString(PSTR(",")); }
+      if (idx < (N_AXIS-1))
+       { printPgmString(PSTR(",")); }
     }
   }
   
@@ -463,7 +465,8 @@ void report_realtime_status()
       print_position[idx] -= gc_state.coord_system[idx]+gc_state.coord_offset[idx];
       if (idx == TOOL_LENGTH_OFFSET_AXIS) { print_position[idx] -= gc_state.tool_length_offset; }    
       printFloat_CoordValue(print_position[idx]);
-      if (idx < (N_AXIS-1)) { printPgmString(PSTR(",")); }
+      if (idx < (N_AXIS-1))
+       { printPgmString(PSTR(",")); }
     }
   }
         
@@ -498,12 +501,12 @@ void report_realtime_status()
   
   if (bit_istrue(settings.status_report_mask,BITFLAG_RT_STATUS_LIMIT_PINS)) {
     printPgmString(PSTR(",Lim:"));
-    print_unsigned_int8(limits_get_state(),2,N_AXIS);
+    print_unsigned_int8(limits_get_state(),2,N_AXIS3);    //no limit on A
   }
   
   #ifdef REPORT_CONTROL_PIN_STATE 
     printPgmString(PSTR(",Ctl:"));
-    print_uint8_base2(CONTROL_PIN & CONTROL_MASK);
+    print_uint8_base2(CONTROL_PIN );
   #endif
   
   printPgmString(PSTR(">\r\n"));

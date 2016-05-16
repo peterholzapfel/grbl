@@ -40,7 +40,7 @@ parser_block_t gc_block;
 
 void gc_init() 
 {
-  memset(&gc_state, 0, sizeof(parser_state_t));
+  memset(&gc_state, 0, sizeof(gc_state));
   
   // Load default G54 coordinate system.
   if (!(settings_read_coord_data(gc_state.modal.coord_select,gc_state.coord_system))) { 
@@ -79,8 +79,8 @@ uint8_t gc_execute_line(char *line)
      executed after successful error-checking. The parser block struct also contains a block
      values struct, word tracking variables, and a non-modal commands tracker for the new 
      block. This struct contains all of the necessary information to execute the block. */
-
-  memset(&gc_block, 0, sizeof(parser_block_t)); // Initialize the parser block struct.
+     
+  memset(&gc_block, 0, sizeof(gc_block)); // Initialize the parser block struct.
   memcpy(&gc_block.modal,&gc_state.modal,sizeof(gc_modal_t)); // Copy current modes
   uint8_t axis_command = AXIS_COMMAND_NONE;
   uint8_t axis_0, axis_1, axis_linear;
@@ -299,9 +299,10 @@ uint8_t gc_execute_line(char *line)
               case 5: gc_block.modal.spindle = SPINDLE_DISABLE; break;
             }
             break;            
+
+              //disable coolant gcodes
          #ifdef ENABLE_M7  
           case 7:
-         #endif
           case 8: case 9:
             word_bit = MODAL_GROUP_M8; 
             switch(int_value) {      
@@ -312,6 +313,7 @@ uint8_t gc_execute_line(char *line)
               case 9: gc_block.modal.coolant = COOLANT_DISABLE; break;
             }
             break;
+         #endif
           default: FAIL(STATUS_GCODE_UNSUPPORTED_COMMAND); // [Unsupported M command]
         }
       
@@ -328,6 +330,7 @@ uint8_t gc_execute_line(char *line)
            legal g-code words and stores their value. Error-checking is performed later since some
            words (I,J,K,L,P,R) have multiple connotations and/or depend on the issued commands. */
         switch(letter){
+          case 'A': word_bit = WORD_A; gc_block.values.xyz[A_AXIS] = value; axis_words |= (1<<A_AXIS); break;
           // case 'A': // Not supported
           // case 'B': // Not supported
           // case 'C': // Not supported
@@ -362,8 +365,9 @@ uint8_t gc_execute_line(char *line)
       
     }   
   } 
-  // Parsing complete!
   
+  // Parsing complete!
+
 
   /* -------------------------------------------------------------------------------------
      STEP 3: Error-check all commands and values passed in this block. This step ensures all of
@@ -826,7 +830,7 @@ uint8_t gc_execute_line(char *line)
   // [0. Non-specific error-checks]: Complete unused value words check, i.e. IJK used when in arc
   // radius mode, or axis words that aren't used in the block.  
   bit_false(value_words,(bit(WORD_N)|bit(WORD_F)|bit(WORD_S)|bit(WORD_T))); // Remove single-meaning value words. 
-  if (axis_command) { bit_false(value_words,(bit(WORD_X)|bit(WORD_Y)|bit(WORD_Z))); } // Remove axis words. 
+  if (axis_command) { bit_false(value_words,(bit(WORD_X)|bit(WORD_Y)|bit(WORD_Z)|bit(WORD_A))); } // Remove axis words. 
   if (value_words) { FAIL(STATUS_GCODE_UNUSED_WORDS); } // [Unused words]
 
    

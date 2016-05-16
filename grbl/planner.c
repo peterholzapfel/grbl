@@ -200,7 +200,7 @@ static void planner_recalculate()
 
 void plan_reset() 
 {
-  memset(&pl, 0, sizeof(planner_t)); // Clear planner struct
+  memset(&pl, 0, sizeof(pl)); // Clear planner struct
   block_buffer_tail = 0;
   block_buffer_head = 0; // Empty = tail
   next_buffer_head = 1; // plan_next_block_index(block_buffer_head)
@@ -310,9 +310,12 @@ uint8_t plan_check_full_buffer()
     if (delta_mm < 0 ) { block->direction_bits |= get_direction_pin_mask(idx); }
     
     // Incrementally compute total move distance by Euclidean norm. First add square of each term.
-    block->millimeters += delta_mm*delta_mm;
+    if (idx != A_AXIS)
+      block->millimeters += delta_mm*delta_mm;
   }
-  block->millimeters = sqrt(block->millimeters); // Complete millimeters calculation with sqrt()
+  
+  float xyz_mm = sqrt(block->millimeters);
+  block->millimeters = sqrt(block->millimeters+(delta_mm*delta_mm)); // Complete millimeters calculation with sqrt()
   
   // Bail if this is a zero-length block. Highly unlikely to occur.
   if (block->step_event_count == 0) { return; } 
@@ -342,7 +345,8 @@ uint8_t plan_check_full_buffer()
       // Incrementally compute cosine of angle between previous and current path. Cos(theta) of the junction
       // between the current move and the previous move is simply the dot product of the two unit vectors, 
       // where prev_unit_vec is negative. Used later to compute maximum junction speed.
-      junction_cos_theta -= pl.previous_unit_vec[idx] * unit_vec[idx];
+      if (idx != A_AXIS)
+          junction_cos_theta -= pl.previous_unit_vec[idx] * unit_vec[idx];
     }
   }
   

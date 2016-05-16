@@ -79,15 +79,19 @@ void settings_restore(uint8_t restore_flag) {
 	if (DEFAULT_HARD_LIMIT_ENABLE) { settings.flags |= BITFLAG_HARD_LIMIT_ENABLE; }
 	if (DEFAULT_HOMING_ENABLE) { settings.flags |= BITFLAG_HOMING_ENABLE; }
   
+	settings.steps_per_mm[A_AXIS] = DEFAULT_A_STEPS_PER_MM;
 	settings.steps_per_mm[X_AXIS] = DEFAULT_X_STEPS_PER_MM;
 	settings.steps_per_mm[Y_AXIS] = DEFAULT_Y_STEPS_PER_MM;
 	settings.steps_per_mm[Z_AXIS] = DEFAULT_Z_STEPS_PER_MM;
+	settings.max_rate[A_AXIS] = DEFAULT_A_MAX_RATE;
 	settings.max_rate[X_AXIS] = DEFAULT_X_MAX_RATE;
 	settings.max_rate[Y_AXIS] = DEFAULT_Y_MAX_RATE;
 	settings.max_rate[Z_AXIS] = DEFAULT_Z_MAX_RATE;
+	settings.acceleration[A_AXIS] = DEFAULT_A_ACCELERATION;
 	settings.acceleration[X_AXIS] = DEFAULT_X_ACCELERATION;
 	settings.acceleration[Y_AXIS] = DEFAULT_Y_ACCELERATION;
 	settings.acceleration[Z_AXIS] = DEFAULT_Z_ACCELERATION;
+	settings.max_travel[A_AXIS] = (-DEFAULT_A_MAX_TRAVEL);
 	settings.max_travel[X_AXIS] = (-DEFAULT_X_MAX_TRAVEL);
 	settings.max_travel[Y_AXIS] = (-DEFAULT_Y_MAX_TRAVEL);
 	settings.max_travel[Z_AXIS] = (-DEFAULT_Z_MAX_TRAVEL);    
@@ -155,19 +159,23 @@ uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
   return(true);
 }  
 
+int fuck, fuckedup;
 
 // Reads Grbl global settings struct from EEPROM.
 uint8_t read_global_settings() {
   // Check version-byte of eeprom
   uint8_t version = eeprom_get_char(0);
-  if (version == SETTINGS_VERSION) {
+  if (version != SETTINGS_VERSION)
+    return false;
+    
+  
     // Read settings-record and check checksum
-    if (!(memcpy_from_eeprom_with_checksum((char*)&settings, EEPROM_ADDR_GLOBAL, sizeof(settings_t)))) {
-      return(false);
-    }
-  } else {
-    return(false); 
+  if (!(memcpy_from_eeprom_with_checksum((char*)&settings, EEPROM_ADDR_GLOBAL, sizeof(settings_t)))) 
+    return(false);
+ 
+    
   }
+    
   return(true);
 }
 
@@ -276,7 +284,8 @@ uint8_t settings_store_global_setting(uint8_t parameter, float value) {
 
 // Initialize the config subsystem
 void settings_init() {
-  if(!read_global_settings()) {
+  if(!read_global_settings())
+  {
     report_status_message(STATUS_SETTING_READ_FAIL);
     settings_restore(SETTINGS_RESTORE_ALL); // Force restore all EEPROM data.
     report_grbl_settings();
@@ -301,7 +310,8 @@ uint8_t get_step_pin_mask(uint8_t axis_idx)
 {
   if ( axis_idx == X_AXIS ) { return((1<<X_STEP_BIT)); }
   if ( axis_idx == Y_AXIS ) { return((1<<Y_STEP_BIT)); }
-  return((1<<Z_STEP_BIT));
+  if ( axis_idx == Z_AXIS ) { return((1<<Z_STEP_BIT)); }
+  return((1<<A_STEP_BIT));
 }
 
 
@@ -310,7 +320,8 @@ uint8_t get_direction_pin_mask(uint8_t axis_idx)
 {
   if ( axis_idx == X_AXIS ) { return((1<<X_DIRECTION_BIT)); }
   if ( axis_idx == Y_AXIS ) { return((1<<Y_DIRECTION_BIT)); }
-  return((1<<Z_DIRECTION_BIT));
+  if ( axis_idx == Z_AXIS ) { return((1<<Z_DIRECTION_BIT)); }
+  return((1<<A_DIRECTION_BIT));
 }
 
 
