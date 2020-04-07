@@ -3,7 +3,7 @@
 
 ***
 
-Grbl 4-axis uses grbl 0.9 as a base with no variable spindle or spindle direction pin. D11 is z-limit, D12 is A-step, D13 is A-direction. Spindle enable is on the A3 pin (previously coolant enable)
+Grbl 4-axis uses grbl 0.9 as a base with no variable spindle or spindle direction pin. D11 is z-limit, D12 is A-step, D13 is A-direction. Spindle functionality is disabled, 4th limit switch is on Analog IN A3 (Coolant Enable on CNC Shield). No warranties! This is just a quick hack
 
 Grbl is a no-compromise, high performance, low cost alternative to parallel-port-based motion control for CNC milling. It will run on a vanilla Arduino (Duemillanove/Uno) as long as it sports an Atmega 328. 
 
