@@ -238,8 +238,7 @@ void mc_homing_cycle()
   // Perform homing routine. NOTE: Special motion case. Only system reset works.
   
   // Search to engage all axes limit switches at faster homing seek rate.
-//  printPgmString(PSTR("HOMING_CYCLE_0\r\n"));
-//  limits_go_home(HOMING_CYCLE_0);  // Homing cycle 0
+  limits_go_home(HOMING_CYCLE_0);  // Homing cycle 0
 
   #ifdef HOMING_CYCLE_1
     limits_go_home(HOMING_CYCLE_1);  // Homing cycle 1
