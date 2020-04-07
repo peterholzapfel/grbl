@@ -501,7 +501,7 @@ void report_realtime_status()
   
   if (bit_istrue(settings.status_report_mask,BITFLAG_RT_STATUS_LIMIT_PINS)) {
     printPgmString(PSTR(",Lim:"));
-    print_unsigned_int8(limits_get_state(),2,N_AXIS3);    //no limit on A
+    print_unsigned_int8(limits_get_state(),2,N_AXIS4);    //no limit on A
   }
   
   #ifdef REPORT_CONTROL_PIN_STATE 

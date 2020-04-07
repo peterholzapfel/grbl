@@ -67,9 +67,10 @@
 
 // Define homing/hard limit switch input pins and limit interrupt vectors. 
 // NOTE: All limit bit pins must be on the same port, but not on a port with other input pins (CONTROL).
-#define LIMIT_DDR        DDRB
-#define LIMIT_PIN        PINB
-#define LIMIT_PORT       PORTB
+#define LIMIT_DDR0        DDRB
+#define LIMIT_PIN0        PINB
+#define LIMIT_PIN1        PINC
+#define LIMIT_PORT0       PORTB
 #define X_LIMIT_BIT      1  // Uno Digital Pin 9
 #define Y_LIMIT_BIT      2  // Uno Digital Pin 10
 #ifdef VARIABLE_SPINDLE // Z Limit pin and spindle enabled swapped to access hardware PWM on Pin 11.  
@@ -77,30 +78,41 @@
 #else
   #define Z_LIMIT_BIT    3  // Uno Digital Pin 11
 #endif
-#define LIMIT_MASK       ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT)|(1<<Z_LIMIT_BIT)) // All limit bits
-#define LIMIT_INT        PCIE0  // Pin change interrupt enable pin
-#define LIMIT_INT_vect   PCINT0_vect 
-#define LIMIT_PCMSK      PCMSK0 // Pin change interrupt register
+
+// this is for limit a
+#define LIMIT_DDR1   DDRC
+#define LIMIT_PORT1  PORTC
+#define A_LIMIT_BIT   3 // Uno Analog Pin 3 (On CNC Shield labelled "Coolant Enable")
+
+#define LIMIT_MASK0       ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT)|(1<<Z_LIMIT_BIT)) // All limit bits
+#define LIMIT_MASK1       ((1<<A_LIMIT_BIT))
+#define LIMIT_INT0        PCIE0  // Pin change interrupt enable pin
+#define LIMIT_INT1        PCIE1  // Pin change interrupt enable pin
+#define LIMIT_INT_vect0   PCINT0_vect
+#define LIMIT_PCMSK0      PCMSK0 // Pin change interrupt register
+#define LIMIT_PCMSK1      PCMSK1
+
+
 
 // Define spindle enable and spindle direction output pins.
-#define SPINDLE_ENABLE_DDR    DDRC
-#define SPINDLE_ENABLE_PORT   PORTC
+//#define SPINDLE_ENABLE_DDR    DDRC
+//#define SPINDLE_ENABLE_PORT   PORTC
 // Z Limit pin and spindle PWM/enable pin swapped to access hardware PWM on Pin 11.
-#ifdef VARIABLE_SPINDLE 
-  #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
-    // If enabled, spindle direction pin now used as spindle enable, while PWM remains on D11.
-    #define SPINDLE_ENABLE_BIT    3  // Uno Digital Pin 13 (NOTE: D13 can't be pulled-high input due to LED.)
-  #else
-    #define SPINDLE_ENABLE_BIT    3  // Uno analogue 3
-  #endif
-#else
-  #define SPINDLE_ENABLE_BIT    3  // Uno analogue 3
-#endif
-#ifndef USE_SPINDLE_DIR_AS_ENABLE_PIN
-  //#define SPINDLE_DIRECTION_DDR   DDRB
-  //#define SPINDLE_DIRECTION_PORT  PORTB
-  //#define SPINDLE_DIRECTION_BIT   5  // Uno Digital Pin 13 (NOTE: D13 can't be pulled-high input due to LED.)
-#endif
+//#ifdef VARIABLE_SPINDLE
+//  #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+//    // If enabled, spindle direction pin now used as spindle enable, while PWM remains on D11.
+//    #define SPINDLE_ENABLE_BIT    3  // Uno Digital Pin 13 (NOTE: D13 can't be pulled-high input due to LED.)
+//  #else
+//    #define SPINDLE_ENABLE_BIT    3  // Uno analogue 3
+//  #endif
+//#else
+//  #define SPINDLE_ENABLE_BIT    3  // Uno analogue 3
+//#endif
+//#ifndef USE_SPINDLE_DIR_AS_ENABLE_PIN
+//  //#define SPINDLE_DIRECTION_DDR   DDRB
+//  //#define SPINDLE_DIRECTION_PORT  PORTB
+//  //#define SPINDLE_DIRECTION_BIT   5  // Uno Digital Pin 13 (NOTE: D13 can't be pulled-high input due to LED.)
+//#endif
   
 // Define flood and mist coolant enable output pins.
 // NOTE: Uno analog pins 4 and 5 are reserved for an i2c interface, and may be installed at

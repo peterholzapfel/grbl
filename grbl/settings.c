@@ -326,5 +326,6 @@ uint8_t get_limit_pin_mask(uint8_t axis_idx)
 {
   if ( axis_idx == X_AXIS ) { return((1<<X_LIMIT_BIT)); }
   if ( axis_idx == Y_AXIS ) { return((1<<Y_LIMIT_BIT)); }
-  return((1<<Z_LIMIT_BIT));
+  if ( axis_idx == Z_AXIS ) { return((1<<Z_LIMIT_BIT)); }
+  return((1<<A_LIMIT_BIT));
 }
