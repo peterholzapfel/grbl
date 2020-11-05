@@ -248,7 +248,7 @@ void mc_homing_cycle()
   #endif
 
   // homing cycle for A_AXIS
-  limits_go_home((1<<A_AXIS));
+//  limits_go_home((1<<A_AXIS));
     
   protocol_execute_realtime(); // Check for reset and set system abort.
   if (sys.abort) { return; } // Did not complete. Alarm state set by mc_alarm.
